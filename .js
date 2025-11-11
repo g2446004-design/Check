@@ -9,8 +9,8 @@ let categories = loadCategories();
 // --- データのロードと保存 ---
 
 function loadCategories() {
+    // 既存のロード/デフォルトデータロジックは前回と同じ
     const savedCategories = localStorage.getItem('checklistCategories');
-    // デフォルトデータを設定
     const defaultCategories = [
         {
             id: Date.now() + 1,
@@ -33,8 +33,6 @@ function loadCategories() {
             ]
         }
     ];
-
-    // ローカルストレージにデータがあればそれを使い、なければデフォルトデータを使う
     return savedCategories ? JSON.parse(savedCategories) : defaultCategories;
 }
 
@@ -44,9 +42,8 @@ function saveCategories() {
 
 // --- カテゴリー/アイテムの描画処理 ---
 
-// カテゴリーカード全体のHTMLを生成
+// カテゴリーカード全体のHTMLを生成 (変更なし)
 function createCategoryCard(category) {
-    // カテゴリーカードのDOM要素を作成
     const card = document.createElement('div');
     card.className = 'category-card';
     card.dataset.categoryId = category.id;
@@ -60,14 +57,15 @@ function createCategoryCard(category) {
     const itemListHtml = category.items.map(item => `
         <li class="item" data-item-id="${item.id}">
             <input type="checkbox" id="item-${item.id}" ${item.checked ? 'checked' : ''} data-category-id="${category.id}" data-item-id="${item.id}">
-            <label for="item-${item.id}" class="item-label">${item.name}</label>
+            <label for="item-${item.id}" class="item-label" data-editable="item-name" data-category-id="${category.id}" data-item-id="${item.id}">${item.name}</label>
             <button class="delete-item-btn" data-category-id="${category.id}" data-item-id="${item.id}">×</button>
         </li>
     `).join('');
 
+    // カテゴリータイトルに data-editable 属性を追加
     card.innerHTML = `
         <div class="category-header">
-            <h2 class="category-title">${category.name}</h2>
+            <h2 class="category-title" data-editable="category-name" data-category-id="${category.id}">${category.name}</h2>
             <button class="delete-category-btn" data-category-id="${category.id}">×</button>
         </div>
         
@@ -91,7 +89,7 @@ function createCategoryCard(category) {
     return card;
 }
 
-// 全カテゴリーを再描画する
+// 全カテゴリーを再描画する (変更なし)
 function renderCategories() {
     categoriesContainer.innerHTML = '';
     categories.forEach(category => {
@@ -99,11 +97,10 @@ function renderCategories() {
     });
 }
 
-// 特定のカテゴリーのみを更新 (進捗バーの更新に使う)
+// 進捗バーの更新 (変更なし)
 function updateCategoryCard(category) {
     const card = categoriesContainer.querySelector(`.category-card[data-category-id="${category.id}"]`);
     if (!card) return;
-
     const totalItems = category.items.length;
     const checkedItems = category.items.filter(item => item.checked).length;
     const progressPercentage = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
@@ -113,44 +110,95 @@ function updateCategoryCard(category) {
 }
 
 
-// --- イベントハンドラ ---
+// --- 編集機能の追加ロジック ---
 
-// チェックボックスの状態変更
+function handleEditStart(event) {
+    const target = event.target;
+    // data-editable 属性を持つ要素（カテゴリー名またはアイテム名）をダブルクリックした場合
+    if (event.detail === 2 && target.dataset.editable) {
+        // 現在のテキストを取得
+        const currentText = target.textContent;
+        
+        // テキスト入力フィールドを作成
+        const inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = currentText;
+        inputField.className = target.classList.contains('category-title') ? 'category-title-input' : 'item-label-input';
+        
+        // 元の要素を非表示にして入力フィールドを挿入
+        target.style.display = 'none';
+        target.parentNode.insertBefore(inputField, target.nextSibling);
+
+        // フォーカスを当ててすぐに編集できるようにする
+        inputField.focus();
+
+        // 編集終了時の処理を設定
+        inputField.addEventListener('blur', () => handleEditEnd(inputField, target));
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                inputField.blur(); // blurイベントが発火し、handleEditEndが実行される
+            }
+        });
+    }
+}
+
+function handleEditEnd(inputField, targetElement) {
+    const newText = inputField.value.trim();
+    const isCategory = targetElement.dataset.editable === 'category-name';
+    const id = parseInt(targetElement.dataset.categoryId || targetElement.dataset.itemId);
+
+    if (newText && newText !== targetElement.textContent.trim()) {
+        // データモデルを更新
+        if (isCategory) {
+            const category = categories.find(c => c.id === id);
+            if (category) category.name = newText;
+        } else {
+            const categoryId = parseInt(targetElement.dataset.categoryId);
+            const category = categories.find(c => c.id === categoryId);
+            const item = category.items.find(i => i.id === id);
+            if (item) item.name = newText;
+        }
+        
+        // DOMと表示を更新
+        targetElement.textContent = newText;
+        saveCategories();
+    }
+
+    // 入力フィールドを削除し、元の要素を再表示
+    inputField.parentNode.removeChild(inputField);
+    targetElement.style.display = '';
+}
+
+
+// --- その他の既存イベントハンドラ (変更なし) ---
+
 function handleCheckboxChange(event) {
     if (event.target.type === 'checkbox') {
         const categoryId = parseInt(event.target.dataset.categoryId);
         const itemId = parseInt(event.target.dataset.itemId);
         const isChecked = event.target.checked;
-
-        // データ更新
         const category = categories.find(c => c.id === categoryId);
         if (category) {
             const item = category.items.find(i => i.id === itemId);
             if (item) {
                 item.checked = isChecked;
-                updateCategoryCard(category); // 進捗を更新
-                saveCategories(); // 保存
+                updateCategoryCard(category);
+                saveCategories();
             }
         }
     }
 }
 
-// 新しいカテゴリーを追加
 addCategoryBtn.addEventListener('click', () => {
     const newCategoryName = prompt("新しいカテゴリー名を入力してください:");
     if (newCategoryName) {
-        const newCategory = {
-            id: Date.now(),
-            name: newCategoryName,
-            items: []
-        };
+        const newCategory = { id: Date.now(), name: newCategoryName, items: [] };
         categories.push(newCategory);
-        renderCategories(); // 全再描画
+        renderCategories();
         saveCategories();
     }
 });
 
-// アイテムを追加
 function handleAddItem(event) {
     if (event.target.classList.contains('add-item-btn')) {
         const categoryId = parseInt(event.target.dataset.categoryId);
@@ -161,14 +209,13 @@ function handleAddItem(event) {
             if (category) {
                 const newItem = { id: Date.now(), name: newItemName, checked: false };
                 category.items.push(newItem);
-                renderCategories(); // 全再描画して新しいアイテムを表示
+                renderCategories();
                 saveCategories();
             }
         }
     }
 }
 
-// カテゴリーまたはアイテムを削除
 function handleDelete(event) {
     if (event.target.classList.contains('delete-category-btn')) {
         const categoryId = parseInt(event.target.dataset.categoryId);
@@ -180,19 +227,17 @@ function handleDelete(event) {
     } else if (event.target.classList.contains('delete-item-btn')) {
         const categoryId = parseInt(event.target.dataset.categoryId);
         const itemId = parseInt(event.target.dataset.itemId);
-
         const category = categories.find(c => c.id === categoryId);
         if (category) {
             category.items = category.items.filter(i => i.id !== itemId);
-            renderCategories(); // 全再描画
+            renderCategories();
             saveCategories();
         }
     }
 }
 
-// すべてリセット
 resetAllBtn.addEventListener('click', () => {
-    if (confirm("すべてのチェック状態を解除しますか？\n（アイテムやカテゴリー自体は削除されません）")) {
+    if (confirm("すべてのチェック状態を解除しますか？")) {
         categories.forEach(category => {
             category.items.forEach(item => {
                 item.checked = false;
@@ -204,10 +249,12 @@ resetAllBtn.addEventListener('click', () => {
 });
 
 
-// イベントリスナーを一括で設定（動的に生成される要素に対応するため）
+// イベントリスナーを一括で設定
 categoriesContainer.addEventListener('change', handleCheckboxChange);
 categoriesContainer.addEventListener('click', handleAddItem);
 categoriesContainer.addEventListener('click', handleDelete);
+// 編集機能のためのダブルクリックイベントを追加
+categoriesContainer.addEventListener('dblclick', handleEditStart);
 
 
 // 初期描画
