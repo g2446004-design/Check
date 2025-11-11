@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f9; /* 背景色 */
+    background-color: #f4f7f9;
     padding: 20px;
     margin: 0;
 }
@@ -9,28 +9,32 @@ header {
     text-align: center;
     margin-bottom: 40px;
     position: relative;
+    padding: 10px 0;
 }
 
 .header-content {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 1.8em;
     color: #333;
-    display: inline;
+    margin: 5px 0 0;
 }
 
 header p {
     color: #666;
-    margin-top: 5px;
+    margin: 0;
+    font-size: 0.9em;
 }
 
-/* すべてリセットボタン */
+/* すべてリセットボタンのレイアウトを安定化 */
 .reset-button {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 15px; 
+    right: 5px; 
     padding: 8px 15px;
     background: white;
     border: 1px solid #ddd;
@@ -38,11 +42,20 @@ header p {
     cursor: pointer;
     font-size: 0.9em;
     color: #666;
+    z-index: 10;
+    transition: background-color 0.2s;
+}
+.reset-button:hover {
+    background-color: #eee;
+}
+
+main {
+    padding: 0 5px; 
 }
 
 /* カテゴリ追加ボタン */
 .add-button {
-    background-color: #3c3c3c;
+    background-color: #333;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -50,57 +63,71 @@ header p {
     cursor: pointer;
     font-weight: bold;
     margin-bottom: 20px;
-    display: block; /* 常に左上配置を想定 */
+    display: inline-block; 
+    transition: background-color 0.2s;
+}
+.add-button:hover {
+    background-color: #555;
 }
 
-/* カテゴリコンテナ (Flexboxで横並び) */
 .categories-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px; /* カテゴリ間のスペース */
+    gap: 30px;
 }
 
-/* 個別のカテゴリカード */
+/* カテゴリカード */
 .category-card {
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    width: 300px; /* カードの幅を固定 */
+    width: 300px;
     flex-shrink: 0;
-    position: relative;
 }
 
-/* カテゴリヘッダー */
 .category-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    align-items: flex-start;
+    margin-bottom: 15px;
 }
 
 .category-title {
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
     color: #333;
 }
 
+/* カテゴリ削除ボタン */
 .delete-category {
     background: none;
     border: none;
-    color: #999;
+    color: #aaa;
     font-size: 1.2em;
     cursor: pointer;
     line-height: 1;
+    padding: 0 5px;
+}
+.delete-category:hover {
+    color: #e74c3c; /* ホバーで赤く */
 }
 
 /* 進捗バー */
 .progress-container {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 5px;
 }
 
 .progress-bar {
-    height: 5px;
+    height: 6px;
     background-color: #eee;
     border-radius: 3px;
     overflow: hidden;
@@ -108,15 +135,9 @@ header p {
 
 .progress-fill {
     height: 100%;
-    width: 0%; /* JSで更新 */
-    background-color: #007bff; /* 青色 */
+    width: 0%;
+    background-color: #007bff;
     transition: width 0.3s;
-}
-
-.progress-text {
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 5px;
 }
 
 /* アイテムリスト */
@@ -131,11 +152,6 @@ header p {
     align-items: center;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.item-row:last-child {
-    border-bottom: none;
 }
 
 .item-label {
@@ -145,21 +161,20 @@ header p {
     flex-grow: 1;
 }
 
-.item-label input[type="checkbox"] {
-    margin-right: 10px;
-    /* カスタムチェックボックスにする場合はここでスタイルを上書き */
+/* チェックされたアイテムに打ち消し線を適用 */
+.item-label input:checked + span {
+    text-decoration: line-through;
+    color: #999;
 }
 
+/* アイテム削除ボタン */
 .delete-item {
     background: none;
     border: none;
-    color: #ccc;
+    color: #ddd;
     font-size: 1em;
     cursor: pointer;
-    line-height: 1;
-    margin-left: 10px;
 }
-
 .delete-item:hover {
     color: #999;
 }
@@ -171,9 +186,12 @@ header p {
     padding: 8px 0;
     margin-top: 15px;
     border: 1px dashed #ccc;
-    background: #f9f9f9;
+    background: #fcfcfc;
     border-radius: 5px;
     cursor: pointer;
     color: #666;
     font-weight: normal;
+}
+.add-item-btn:hover {
+    background-color: #f0f0f0;
 }
