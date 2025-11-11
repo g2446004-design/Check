@@ -1,158 +1,33 @@
-/* 基本スタイル */
 body {
-    background-color: #f4f7fa;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', 'Noto Sans CJK JP', sans-serif;
-    color: #333;
-    padding: 20px;
+    font-family: sans-serif;
+    margin: 20px;
 }
 
-header {
-    text-align: center;
-    margin-bottom: 30px;
+.add-form {
+    margin-bottom: 20px;
 }
 
-header h1 {
-    margin: 0;
+#checklist li {
+    list-style: none; /* 点を消す */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-header p {
-    margin: 5px 0 15px;
-    color: #555;
+/* カテゴリーバッジのスタイル */
+.category-badge {
+    background-color: #eee;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    margin-left: 10px;
 }
 
-#reset-all-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 8px 16px;
-    cursor: pointer;
+/* (発展) カテゴリーごとに色を変える例 */
+#checklist li[data-category="valuables"] {
+    background-color: #fffbe6; /* 貴重品は薄い黄色 */
 }
-
-#reset-all-btn:hover {
-    background-color: #e0e0e0;
-}
-
-/* カードのレイアウト */
-#card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-/* カテゴリカード */
-.category-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    width: 300px;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-}
-
-.card-header h3 {
-    margin: 0;
-}
-
-.delete-card-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #aaa;
-    cursor: pointer;
-}
-
-/* 進捗バー */
-.category-card label {
-    font-size: 12px;
-    color: #777;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    margin-bottom: 15px;
-}
-/* Firefox用 */
-.progress-bar::-moz-progress-bar { background-color: #007bff; }
-/* Chrome/Safari用 */
-.progress-bar::-webkit-progress-value { background-color: #007bff; }
-
-
-/* アイテムリスト */
-.item-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 15px 0;
-    min-height: 50px;
-}
-
-.item-list li {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 16px;
-}
-
-.item-list li input[type="checkbox"] {
-    margin-right: 10px;
-    width: 18px;
-    height: 18px;
-}
-
-.item-list li span {
-    flex-grow: 1; /* テキストが伸びるようにする */
-}
-
-/* チェックされたアイテム */
-.item-list li input[type="checkbox"]:checked + span {
-    text-decoration: line-through;
-    color: #999;
-}
-
-.delete-item-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
-    font-size: 16px;
-    visibility: hidden; /* 普段は隠す */
-}
-
-.item-list li:hover .delete-item-btn {
-    visibility: visible; /* ホバー時に表示 */
-}
-
-/* アイテム追加フォーム */
-.add-item-form {
-    display: flex;
-    gap: 10px;
-}
-
-.item-input {
-    flex-grow: 1;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 8px;
-}
-
-.add-item-btn {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    white-space: nowrap; /* テキストを折り返さない */
-}
-
-.add-item-btn:hover {
-    background-color: #f0f0f0;
+#checklist li[data-category="gadget"] {
+    background-color: #e6f7ff; /* ガジェットは薄い青 */
 }
