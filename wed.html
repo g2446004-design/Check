@@ -3,38 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>忘れ物チェックアプリ</title>
+    <title>忘れ物チェッカー</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <h1>📝 忘れ物チェックアプリ</h1>
-        <p>出かける前に確認しましょう</p>
-        <button id="reset-all-btn">すべてリセット</button>
-    </header>
+    <h1>忘れ物チェッカー</h1>
 
-    <main id="card-container">
+    <div class="add-form">
+        <input type="text" id="item-name" placeholder="項目名（例：パスポート）">
         
-        <div class="category-card">
-            <div class="card-header">
-                <h3>外出時の必需品</h3>
-                <button class="delete-card-btn">×</button>
-            </div>
-            
-            <label>進捗</label>
-            <progress class="progress-bar" value="0" max="100"></progress>
-            
-            <ul class="item-list">
-                </ul>
-            
-            <div class="add-item-form">
-                <input type="text" class="item-input" placeholder="アイテム名">
-                <button class="add-item-btn">＋ アイテムを追加</button>
-            </div>
-        </div>
+        <select id="item-category">
+            <option value="basic">基本</option>
+            <option value="valuables">貴重品</option>
+            <option value="gadget">ガジェット</option>
+            <option value="clothing">衣類</option>
+            </select>
+        
+        <button id="add-button">追加</button>
+    </div>
 
-        </main>
+    <h2>チェックリスト</h2>
+    <ul id="checklist">
+        </ul>
 
     <script src="script.js"></script>
 </body>
