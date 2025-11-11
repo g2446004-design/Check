@@ -1,0 +1,179 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9; /* 背景色 */
+    padding: 20px;
+    margin: 0;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.header-content {
+    display: inline-block;
+}
+
+h1 {
+    font-size: 2em;
+    color: #333;
+    display: inline;
+}
+
+header p {
+    color: #666;
+    margin-top: 5px;
+}
+
+/* すべてリセットボタン */
+.reset-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* カテゴリ追加ボタン */
+.add-button {
+    background-color: #3c3c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: block; /* 常に左上配置を想定 */
+}
+
+/* カテゴリコンテナ (Flexboxで横並び) */
+.categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px; /* カテゴリ間のスペース */
+}
+
+/* 個別のカテゴリカード */
+.category-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 300px; /* カードの幅を固定 */
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* カテゴリヘッダー */
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.category-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.delete-category {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2em;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 進捗バー */
+.progress-container {
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    height: 5px;
+    background-color: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%; /* JSで更新 */
+    background-color: #007bff; /* 青色 */
+    transition: width 0.3s;
+}
+
+.progress-text {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* アイテムリスト */
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.item-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.item-label input[type="checkbox"] {
+    margin-right: 10px;
+    /* カスタムチェックボックスにする場合はここでスタイルを上書き */
+}
+
+.delete-item {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1em;
+    cursor: pointer;
+    line-height: 1;
+    margin-left: 10px;
+}
+
+.delete-item:hover {
+    color: #999;
+}
+
+/* アイテム追加ボタン（カテゴリ内） */
+.add-item-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 0;
+    margin-top: 15px;
+    border: 1px dashed #ccc;
+    background: #f9f9f9;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #666;
+    font-weight: normal;
+}
